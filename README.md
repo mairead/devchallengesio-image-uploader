@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Next + Netlify Starter
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/ed50f56e-4fc2-4c98-8b66-1e5074c6f3d3/deploy-status)](https://app.netlify.com/sites/next-starter/deploys)
@@ -36,3 +37,6 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 2. Navigate to the directory and run `npm run dev`
 3. Make your changes
 4. Connect to [Netlify](https://url.netlify.com/Bk4UicocL) manually (the `netlify.toml` file is the one you'll need to make sure stays intact to make sure the export is done and pointed to the right stuff)
+=======
+# devchallengesio-image-uploader
+>>>>>>> 5642907 (first commit)
