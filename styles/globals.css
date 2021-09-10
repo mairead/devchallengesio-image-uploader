@@ -2,8 +2,9 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+  font-family: Poppins, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
     Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #FAFAFB;
 }
 
 * {
@@ -38,6 +39,17 @@ code {
   display: none;
 }
 
+.panel {
+  background: #FFFFFF;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
 .draggable-area {
   width: 400px;
   height: 220px;
@@ -48,4 +60,54 @@ code {
   border: 1px dashed #97BEF4;
   box-sizing: border-box;
   border-radius: 12px;
+}
+
+.draggable-area--active {
+  border: 1px dashed #2F80ED;
+}
+
+.preview {
+  position: relative;
+  padding-top: 50px;
+  display: none;
+}
+
+.preview--active {
+  display: flex;
+}
+
+.preview::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  margin-left: -17px;
+  background: #219653;
+  border-radius: 50%;
+  color: white;
+  background: #219653 url(../public/tick.svg) 8px 8px no-repeat;
+  background-size: 20px;
+  width: 35px;
+  height: 35px;
+  text-align: center;
+}
+
+.preview__image {
+  height: 225px;
+  width: 400px;
+  border-radius: 12px;
+}
+
+.button {
+  background: #2F80ED;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: Noto Sans, Poppins, -apple-system, BlinkMacSystemFont;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  letter-spacing: -0.035em;
 }
