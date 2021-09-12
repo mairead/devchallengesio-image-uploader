@@ -11,7 +11,7 @@ export const config = {
 // what is this double chained syntax? curried?
 const uploadImage = next => (req, res) => {
   // TODO is this promise syntax ok?
-  // promise stuff seems like voodoo
+  // promise stuff seems like voodoo atm
   return new Promise(async (resolve, reject) => {
     try {
       const form = new Formidable.IncomingForm({
@@ -52,9 +52,7 @@ const handler = (req, res) => {
 }
 
 // TODO what is stringify null 2 doing here?
-// export default function handler(req, res) {
-//     // nothing returned in response?
-//     res.status(200).json({filename: req.body.name});
-// }
+// TODO would like to understand different types of error
+// why are some logged to console and some in catch block in stringify? to send to response? 
 
 export default uploadImage(handler);

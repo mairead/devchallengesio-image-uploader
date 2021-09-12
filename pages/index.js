@@ -6,13 +6,12 @@ import Footer from '@components/Footer'
 // TODO form action and submit as no-js fallback
 // TODO move separate views and logic into separate components
 // TODO Create separate module CSS  - what is .module?
-// TODO hide preview panel
-// TODO fix double file browser appearing?
-// TODO body exceeded 1MB limit
-// TODO unit tests?
+// TODO unit tests
+// TODO add eslint
+// TODO is it worth adding a fake progress bar or something which counts files uploaded?
+// TODO fix issue in CSS Module wrapper - can't run tests
 
 export default function Home() {
-  // const [fileSelected, setFileSelected] = useState();
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [showFileUpload, setShowFileUpload] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
@@ -30,27 +29,27 @@ export default function Home() {
   const onFileChange = (e) => {
     const fileObj = e.target.files[0];
     onFileSelected(fileObj);
-    // Need to empty onFileChange after so it can
-    // reselect the same file again
-    // setFileSelected(null);
 
     e.preventDefault();
   }
 
   const onDragOver = (e) => {
     setDragActive(true);
+
     e.preventDefault();
     e.stopPropagation();
   }
 
   const onDragEnter = (e) => {
     setDragActive(true);
+
     e.preventDefault();
     e.stopPropagation();
   }
 
   const onDragLeave = (e) => {
     setDragActive(false);
+
     e.preventDefault();
     e.stopPropagation();
   }
@@ -76,24 +75,23 @@ export default function Home() {
       setShowLoadingDialog(false);
       setShowPreview(true);
       setShowFileUpload(false);
-      console.log('network returned as 200');
-      // show uploaded image
     })
     .catch(() => {
       // whats best error handling pattern?
+      // how can I fake an error happening to test?
     });
-    // is this then/catch out of date?
+    // is this .then()/.catch() out of date?
     // should I be using async/await instead?
   }
 
   const onFileSelected = (fileObj) => {
     setShowLoadingDialog(true);
+    setShowFileUpload(false);
     onPreviewFile(fileObj);
     onUploadFile(fileObj)
     console.log(fileObj);
   }
 
-  // is this going to change correctly on each render?
   const draggableClasses = ['draggable-area'];
   if (dragActive) {
     draggableClasses.push('draggable-area--active');
@@ -156,6 +154,7 @@ export default function Home() {
         {showLoadingDialog && (
           <div className="panel loading-dialog">
             <p>Uploading....</p>
+            <progress id="progress-bar" max="100" value="0" />
           </div>
         )}
         <div className={previewClasses.join(' ')}>

@@ -66,6 +66,10 @@ code {
   border: 1px dashed #2F80ED;
 }
 
+.loading-dialog {
+  text-align: left;
+}
+
 .preview {
   position: relative;
   padding-top: 50px;
