@@ -5,20 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
-    "test": "jest"
+    "export": "next export"
   },
   "dependencies": {
     "@babel/core": "^7.15.5",
-    "formidable": "^1.2.2",
     "next": "^11.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.0",
-    "babel-jest": "^27.1.1",
-    "jest": "^27.1.1"
   }
 }
