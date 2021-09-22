@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 import Head from 'next/head'
+// import onUploadFile from 'actions/onUploadFile'
 import DragAndDropInput from '@components/DragAndDrop'
 import FileUploadInput from '@components/FileUploadInput'
 import Header from '@components/Header'
@@ -14,34 +15,51 @@ export default function Home() {
   const [showFileUpload, setShowFileUpload] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
 
+  // const [uploadedFile, setUploadedFile] = useState(null);
+
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
 
-  // TODO is it better to move in component action logic to their own file?
-  const onUploadFile = (fileObj) => {
+  // useEffect(() => {
+  //   if (uploadedFile) {
+  //     setShowLoadingDialog(false);
+  //     setShowPreview(true);
+  //     setShowFileUpload(false);
+  //   }
+  // }, [uploadedFile]);
+
+  const onUploadFile = async (fileObj) => {
     const body = new FormData();
     body.append('file', fileObj);
-    fetch("/api/image", {
-      method: "POST",
-      body
-    })
-    .then(() => {
-      setShowLoadingDialog(false);
-      setShowPreview(true);
-      setShowFileUpload(false);
-    })
-    .catch(() => {
+
+    try {
+      const response = await fetch('/api/image', {
+        method: "POST",
+        body
+      });
+
+      const data = await response.json();
+
+      return data.file;
+    } catch(e) {
+      return null;
       // whats best error handling pattern?
       // how can I fake an error happening to test?
-    });
-    // is this .then()/.catch() out of date?
-    // should I be using async/await instead?
+    }
   }
 
   const onFileSelected = (fileObj) => {
     setShowLoadingDialog(true);
     setShowFileUpload(false);
     onPreviewFile(fileObj);
-    onUploadFile(fileObj)
+
+    // const { data: files, error } = useSWR([fileObj, onUploadFile])
+
+    // if (error) return;
+    // if (!files) return 'loading';
+
+    // if (files) {
+    //   setUploadedFile(files[0]);
+    // }
   }
 
   const onPreviewFile = (fileObj) => {

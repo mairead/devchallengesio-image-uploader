@@ -33,12 +33,12 @@ describe("Home", () => {
     );
     expect(fileButton).toBeInTheDocument();
   });
-
-  it("should call server route to upload when image dropped into draggable area", () => {
+  // TODO mock the interface to onuploadFile to return a hardcoded success or error
+  it("should call server route to upload when image dropped into draggable area", async () => {
     // ??
   });
 
-  it('should display the uploaded image once successful', () => {
+  it('should display the uploaded image once successful', async () => {
     // ??
   });
 });

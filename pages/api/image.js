@@ -37,8 +37,10 @@ const uploadImage = next => (req, res) => {
       return resolve(res.status(403).send(error));
     }
   });
-}  
+}
 
+
+// TODO we don't need the fields object from Formidable
 const handler = (req, res) => {
   try {
     if (req.method === "POST") {
@@ -53,6 +55,6 @@ const handler = (req, res) => {
 
 // TODO what is stringify null 2 doing here?
 // TODO would like to understand different types of error
-// why are some logged to console and some in catch block in stringify? to send to response? 
+// why are some logged to console and some in catch block in stringify? to send to response?
 
 export default uploadImage(handler);
