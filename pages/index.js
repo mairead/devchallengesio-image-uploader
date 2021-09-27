@@ -63,6 +63,7 @@ export default function Home() {
   }
 
   const onPreviewFile = (fileObj) => {
+    console.log('fileObj', fileObj);
     let reader = new FileReader();
     reader.readAsDataURL(fileObj);
     reader.onloadend = () => {
