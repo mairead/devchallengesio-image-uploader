@@ -38,7 +38,8 @@ describe("Home", () => {
     expect(fileButton).toBeInTheDocument();
   });
 
-  // readAsDataURL encodes to base64
+  // src is empty when it should be string
+  // in preview we base64 the src, when returned from server we want to show the actual file path
   it('should display the uploaded image once successful', async () => {
     render(<Home />);
     const fileInputField = screen.getByLabelText(/Choose a file/i);
