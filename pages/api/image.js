@@ -30,6 +30,8 @@ const uploadImage = next => (req, res) => {
           `public/upload/${files.file.name}`
         );
         fs.renameSync(files.file.path, `public/upload/${files.file.name}`);
+        // need to actually set public path in returned object
+        files.file.path = `/upload/${files.file.name}`;
         req.form = { fields, files };
         return resolve(next(req, res));
       });
@@ -38,7 +40,6 @@ const uploadImage = next => (req, res) => {
     }
   });
 }
-
 
 // TODO we don't need the fields object from Formidable
 const handler = (req, res) => {

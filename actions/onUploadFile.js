@@ -25,10 +25,10 @@ export const onUploadFile = async (fileObj) => {
 // else to tell the user it failed, so you can handle it in a
 // meaningful way
 
-const res = await fetch('/api/comments', {
-  method: 'POST',
-  body: JSON.stringify({ authorId, comment }),
-});
-if (!res.ok) throw new Error(res.statusText);
-// this captures the status number as error message
-return await res.json();
+// const res = await fetch('/api/comments', {
+//   method: 'POST',
+//   body: JSON.stringify({ authorId, comment }),
+// });
+// if (!res.ok) throw new Error(res.statusText);
+// // this captures the status number as error message
+// return await res.json();

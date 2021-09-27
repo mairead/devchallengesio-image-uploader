@@ -4,7 +4,7 @@
 
 import React from "react";
 import { render, screen } from "../test-utils";
-import { fireEvent, waitFor } from '@testing-library/react'
+import { findByText, fireEvent, waitFor } from '@testing-library/react'
 import { createImgHandlerException } from '../../api-mocks/handlers';
 import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
@@ -37,25 +37,8 @@ describe("Home", () => {
     );
     expect(fileButton).toBeInTheDocument();
   });
-  // TODO mock the interface to onuploadFile to return a hardcoded success or error
-  it("should call server route to upload when image dropped into draggable area", async () => {
-    render(<Home />);
 
-    // const fileInputField = screen.getByLabelText(/Choose a file/i);
-
-    // var fileObj = new File(['Blob-Attack'], 'Blob-Attack.jpg', { type: 'image/jpeg' });
-    // const event = {
-    //   target: {
-    //     files: [
-    //       fileObj
-    //     ],
-    //   },
-    // }
-    // fireEvent.change(fileInputField, event);
-
-    // assert network request sent? or a spy has been called
-  });
-
+  // readAsDataURL encodes to base64
   it('should display the uploaded image once successful', async () => {
     render(<Home />);
     const fileInputField = screen.getByLabelText(/Choose a file/i);
@@ -73,10 +56,27 @@ describe("Home", () => {
 
     const image = await screen.findByRole('img');
     await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
-    // assert img object with Blob-Attack.jpg exists .toBeInDocument()
   });
 
-  it('should show an error message if the image upload failed', async () => {
-    mswServer.use(createImgHandlerException);
-  });
+  // TODO what are the different types of error here? wrong file type? file target is null?
+  // it('should show an error message if the image upload failed', async () => {
+  //   mswServer.use(createImgHandlerException);
+
+  //   render(<Home />);
+  //   const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+  //   const event = {
+  //     target: {
+  //       files: [
+  //         'not an image'
+  //       ],
+  //     },
+  //   }
+
+  //   fireEvent.change(fileInputField, event);
+
+  //   const errorMsg = await findByText(/Image not recognised/i)
+
+  //   await waitFor(() => expect(errorMsg).toBeInDocument);
+  // });
 });
