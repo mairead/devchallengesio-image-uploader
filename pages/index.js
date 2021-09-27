@@ -17,25 +17,10 @@ export default function Home() {
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
 
   // TODO is it better to move in component action logic to their own file?
-  // const onUploadFile = (fileObj) => {
-  //   const body = new FormData();
-  //   body.append('file', fileObj);
-  //   fetch("/api/image", {
-  //     method: "POST",
-  //     body
-  //   })
-  //   .then(() => {
-  //     setShowLoadingDialog(false);
-  //     setShowPreview(true);
-  //     setShowFileUpload(false);
-  //   })
-  //   .catch(() => {
-  //     // whats best error handling pattern?
-  //     // how can I fake an error happening to test?
-  //   });
-  //   // is this .then()/.catch() out of date?
-  //   // should I be using async/await instead?
-  // }
+
+  // I think try/catch is better here because you could render something
+  // else to tell the user it failed, so you can handle it in a
+  // meaningful way
 
   // msw didn't work without the async?
   const onUploadFile = async (fileObj) => {
@@ -55,7 +40,6 @@ export default function Home() {
         setShowLoadingDialog(false);
         setShowPreview(true);
         setShowFileUpload(false);
-        console.log('whats in data?', data);
         setImagePreviewSrc(data.files.file.path)
       }
       // setState({ data: json });
@@ -78,7 +62,6 @@ export default function Home() {
     onUploadFile(fileObj);
   }
 
-  // this isn't actually what's returned from the server? is this the local object?
   // const onPreviewFile = (fileObj) => {
   //   console.log('fileObj', fileObj);
   //   let reader = new FileReader();

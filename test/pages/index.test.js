@@ -40,6 +40,8 @@ describe("Home", () => {
 
   // src is empty when it should be string
   // in preview we base64 the src, when returned from server we want to show the actual file path
+
+  // TODO Do we want to test both the preview when it hasn't returned from server and after response?
   it('should display the uploaded image once successful', async () => {
     render(<Home />);
     const fileInputField = screen.getByLabelText(/Choose a file/i);
