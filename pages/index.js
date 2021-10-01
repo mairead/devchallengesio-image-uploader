@@ -16,10 +16,6 @@ export default function Home() {
   const [showPreview, setShowPreview] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  // useEffect(() => {
-  //   setShowError
-  // }, [showError]);
-
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
   let errorMsg;
 
@@ -52,8 +48,7 @@ export default function Home() {
       setShowError(true);
       return null;
       // whats best error handling pattern?
-      // what do we want to see here when an error happens?
-      // how can I fake an error happening to test?
+      // how can I fake the 500 from the server to test manually?
     }
   }
 

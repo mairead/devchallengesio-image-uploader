@@ -1,4 +1,4 @@
-// TODO more unit tests
+// TODO more unit tests - what would these look like?
 // TODO fix issue in CSS Module wrapper - can't run tests
 
 import React from "react";
@@ -60,11 +60,6 @@ describe("Home", () => {
     await waitFor(() => expect(image).toHaveAttribute('src', 'upload/Blob-Attack.jpg'));
   });
 
-  // TODO Do we want to test both the preview when it hasn't returned from server and after response?
-  // this line tests the imagePreview function pushes a b64 encoded obj into the page
-  // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
-
-  // TODO what are the different types of error here? wrong file type? file target is null?
   it('should show an error message if the image upload failed', async () => {
     mswServer.use(createImgHandlerException);
 
@@ -89,3 +84,14 @@ describe("Home", () => {
     expect(errorMsg).toBeInTheDocument()
   });
 });
+
+
+// TODO Next steps???
+  // Do we want to test both the preview when it hasn't returned from server and after response?
+  // this line tests the imagePreview function pushes a b64 encoded obj into the page
+  // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
+
+  // TODO what are the different types of error here?
+    // wrong file type?
+    // file target is null?
+    // 404 API path is wrong?
