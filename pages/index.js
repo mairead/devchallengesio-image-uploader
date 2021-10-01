@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head'
 import { root } from '../config';
 import DragAndDropInput from '@components/DragAndDrop'
@@ -14,8 +14,14 @@ export default function Home() {
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [showFileUpload, setShowFileUpload] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  // useEffect(() => {
+  //   setShowError
+  // }, [showError]);
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
+  let errorMsg;
 
   // TODO is it better to move in component action logic to their own file?
 
@@ -34,14 +40,17 @@ export default function Home() {
 
       const data = await response.json();
       // does this need to return into a callback or state change?
-      setShowLoadingDialog(false);
-      setShowPreview(true);
-      setShowFileUpload(false);
-      setImagePreviewSrc(data.files.file.path)
+      if (data) {
+        setShowLoadingDialog(false);
+        setShowPreview(true);
+        setShowFileUpload(false);
+        setImagePreviewSrc(data.files.file.path)
+      }
+      return data;
     } catch(e) {
-      console.log('is error?', e);
+      errorMsg = e;
+      setShowError(true);
       return null;
-
       // whats best error handling pattern?
       // what do we want to see here when an error happens?
       // how can I fake an error happening to test?
@@ -71,6 +80,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        {showError && (
+          <p className="error">
+            {`Sorry, Image not uploaded, ${errorMsg}`}
+          </p>
+        )}
         {showFileUpload && (
           <div className="panel">
             <Header title="Upload your image" />

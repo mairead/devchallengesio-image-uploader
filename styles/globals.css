@@ -115,3 +115,9 @@ code {
   text-align: center;
   letter-spacing: -0.035em;
 }
+
+.error {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: darksalmon;
+}

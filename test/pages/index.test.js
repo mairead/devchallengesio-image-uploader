@@ -3,8 +3,8 @@
 
 import React from "react";
 import { render, screen } from "../test-utils";
-import { findByText, fireEvent, waitFor } from '@testing-library/react'
-import { createImgHandlerException, createImgHandler } from '../../api-mocks/handlers';
+import { fireEvent, waitFor } from '@testing-library/react'
+import { createImgHandlerException } from '../../api-mocks/handlers';
 import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
 
@@ -65,24 +65,27 @@ describe("Home", () => {
   // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
 
   // TODO what are the different types of error here? wrong file type? file target is null?
-  // it('should show an error message if the image upload failed', async () => {
-  //   mswServer.use(createImgHandlerException);
+  it('should show an error message if the image upload failed', async () => {
+    mswServer.use(createImgHandlerException);
 
-  //   render(<Home />);
-  //   const fileInputField = screen.getByLabelText(/Choose a file/i);
+    render(<Home />);
+    const fileInputField = screen.getByLabelText(/Choose a file/i);
 
-  //   const event = {
-  //     target: {
-  //       files: [
-  //         'not an image'
-  //       ],
-  //     },
-  //   }
+    const file = new File();
+    const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
 
-  //   fireEvent.change(fileInputField, event);
+    const event = {
+      target: {
+        files: [
+          fileObj,
+        ],
+      },
+    }
 
-  //   const errorMsg = await findByText(/Image not recognised/i)
+    fireEvent.change(fileInputField, event);
 
-  //   await waitFor(() => expect(errorMsg).toBeInDocument);
-  // });
+    const errorMsg = await screen.findByText(/Image not uploaded/i)
+
+    expect(errorMsg).toBeInTheDocument()
+  });
 });
