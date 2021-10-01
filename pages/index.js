@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head'
+import { root } from '../config';
 import DragAndDropInput from '@components/DragAndDrop'
 import FileUploadInput from '@components/FileUploadInput'
 import Header from '@components/Header'
@@ -21,32 +22,24 @@ export default function Home() {
   // I think try/catch is better here because you could render something
   // else to tell the user it failed, so you can handle it in a
   // meaningful way
-
-  // msw didn't work without the async?
   const onUploadFile = async (fileObj) => {
     const body = new FormData();
     body.append('file', fileObj);
 
     try {
-      const response = await fetch('/api/image', {
+      const response = await fetch(`${root}/api/image`, {
         method: "POST",
         body
       });
 
       const data = await response.json();
-
       // does this need to return into a callback or state change?
-      if (data) {
-        setShowLoadingDialog(false);
-        setShowPreview(true);
-        setShowFileUpload(false);
-        setImagePreviewSrc(data.files.file.path)
-      }
-      // setState({ data: json });
-      // return data.file; // this isn't going anywhere
-      //??
+      setShowLoadingDialog(false);
+      setShowPreview(true);
+      setShowFileUpload(false);
+      setImagePreviewSrc(data.files.file.path)
     } catch(e) {
-
+      console.log('is error?', e);
       return null;
 
       // whats best error handling pattern?

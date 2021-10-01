@@ -12,6 +12,7 @@ export const config = {
 const uploadImage = next => (req, res) => {
   // TODO is this promise syntax ok?
   // promise stuff seems like voodoo atm
+  // https://stackoverflow.com/questions/43036229/is-it-an-anti-pattern-to-use-async-await-inside-of-a-new-promise-constructor
   return new Promise(async (resolve, reject) => {
     try {
       const form = new Formidable.IncomingForm({
