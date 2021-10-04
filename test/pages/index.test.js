@@ -8,6 +8,22 @@ import { createImgHandlerException } from '../../api-mocks/handlers';
 import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
 
+// more tests?
+
+// it('should render a label and a file input field', () => {
+//   expect(component.find('input[type="file"]')).toExist();
+//   expect(component.find('label')).toExist();
+// });
+
+// it('should attach the label to the input field', () => {
+//   const id = 'fileUpload';
+//   expect(component.find('label').prop('htmlFor')).toBe(id);
+//   expect(component.find('input').prop('id')).toBe(id);
+// });
+
+// it('should not show preview if no image has been selected', () => {
+//   expect(component.find('img')).not.toExist();
+// });
 
 describe("Home", () => {
   it("should render the heading", () => {
@@ -83,6 +99,31 @@ describe("Home", () => {
 
     expect(errorMsg).toBeInTheDocument()
   });
+});
+
+// TODO don't know why last test is failing
+it('should not show success message if image upload failed', async () => {
+  mswServer.use(createImgHandlerException);
+
+  render(<Home />);
+  const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+  const file = new File();
+  const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
+
+  const event = {
+    target: {
+      files: [
+        fileObj,
+      ],
+    },
+  }
+
+  fireEvent.change(fileInputField, event);
+
+  const successMsg = await screen.queryByText(/Uploaded successfully!/i);
+
+  await waitFor(() => expect(successMsg).not.toBeInTheDocument());
 });
 
 

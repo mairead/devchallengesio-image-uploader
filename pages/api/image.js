@@ -46,7 +46,8 @@ const uploadImage = next => (req, res) => {
 const handler = (req, res) => {
   try {
     if (req.method === "POST") {
-      res.status(200).send(req.form);
+      // res.status(200).send(req.form);
+      res.status(500).json({ message: JSON.stringify('There was a server error', null, 2) });
     } else {
       throw String("Method not allowed");
     }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head'
 import { root } from '../config';
 import DragAndDropInput from '@components/DragAndDrop'
+import ErrorMsg from '@components/ErrorMsg'
 import FileUploadInput from '@components/FileUploadInput'
 import Header from '@components/Header'
 import ImagePreview from "@components/ImagePreview"
@@ -14,20 +15,42 @@ export default function Home() {
   const [showLoadingDialog, setShowLoadingDialog] = useState(false);
   const [showFileUpload, setShowFileUpload] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
-  let errorMsg;
+
+  useEffect(() => {
+    if (imagePreviewSrc) {
+      setShowLoadingDialog(false);
+      setShowPreview(true);
+      setShowFileUpload(false);
+      setErrorMsg(null);
+    }
+  }, [imagePreviewSrc]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      console.log("CONTROL RENDER!!!", errorMsg);
+      setShowLoadingDialog(false);
+      setShowPreview(false);
+      setShowFileUpload(true);
+    }
+  }, [errorMsg]);
 
   // TODO is it better to move in component action logic to their own file?
+  // Should the POST action be a custom hook for POST-ing data? like useFetch??
 
   // I think try/catch is better here because you could render something
   // else to tell the user it failed, so you can handle it in a
   // meaningful way
+  // Is try/catch better for async / await ?
+
   const onUploadFile = async (fileObj) => {
     const body = new FormData();
     body.append('file', fileObj);
 
+    setErrorMsg(null);
+    setImagePreviewSrc('');
     try {
       const response = await fetch(`${root}/api/image`, {
         method: "POST",
@@ -35,20 +58,27 @@ export default function Home() {
       });
 
       const data = await response.json();
-      // does this need to return into a callback or state change?
-      if (data) {
-        setShowLoadingDialog(false);
-        setShowPreview(true);
-        setShowFileUpload(false);
-        setImagePreviewSrc(data.files.file.path)
+
+      // console.log('res', response);
+      // console.log('data', data);
+
+      if (response.ok) {
+        // does this need to return into a callback or state change?
+        setImagePreviewSrc(data.files.file.path);
+      } else {
+        setErrorMsg(data.message);
+        // Do I want to throw a new error here or just setState?
+        // Does it matter much?
       }
+
       return data;
     } catch(e) {
-      errorMsg = e;
-      setShowError(true);
-      return null;
+      console.log('error in fetch catch?', e);
+      // and then you catch any other kind of error here? is this redundant?
+      // or would this catch an internet not working type of error?
       // whats best error handling pattern?
-      // how can I fake the 500 from the server to test manually?
+
+      return null;
     }
   }
 
@@ -56,9 +86,22 @@ export default function Home() {
     setShowLoadingDialog(true);
     setShowFileUpload(false);
     // onPreviewFile(fileObj);
-    onUploadFile(fileObj);
+
+    // console.log('what is shape of fileObj in tests', fileObj);
+    // console.log('type', fileObj.type);
+    try {
+      if (fileObj.type === 'image/jpeg' || fileObj.type === 'image/png') {
+        onUploadFile(fileObj);
+      } else {
+        throw new Error("Your file is not the correct file format");
+      }
+    } catch(e) {
+      console.log('what happens in file selection catch?', e);
+      setErrorMsg(e.message);
+    }
   }
 
+  // TODO if we wanted to unit test this would we have to mock FileReader too?
   // const onPreviewFile = (fileObj) => {
   //   console.log('fileObj', fileObj);
   //   let reader = new FileReader();
@@ -75,11 +118,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {showError && (
-          <p className="error">
-            {`Sorry, Image not uploaded, ${errorMsg}`}
-          </p>
-        )}
+        {errorMsg && <ErrorMsg errorMsg={errorMsg}/>}
         {showFileUpload && (
           <div className="panel">
             <Header title="Upload your image" />

@@ -25,7 +25,7 @@ export const createImgHandler = rest.post(createImgPath, async (req, res, ctx) =
 export const createImgHandlerException = rest.post(
   createImgPath,
   async (req, res, ctx) =>
-    res(ctx.status(500), ctx.json({ errorMessage: 'Deliberately broken request' }))
+    res(ctx.status(500), ctx.json({ message: 'Deliberately broken request' }))
 );
 
 export const handlers = [createImgHandler];
