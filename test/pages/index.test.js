@@ -1,10 +1,29 @@
-// TODO more unit tests
-// TODO integration tests which test return value from API
+// TODO more unit tests - what would these look like?
 // TODO fix issue in CSS Module wrapper - can't run tests
 
 import React from "react";
 import { render, screen } from "../test-utils";
+import { fireEvent, waitFor } from '@testing-library/react'
+import { createImgHandlerException } from '../../api-mocks/handlers';
+import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
+
+// more tests?
+
+// it('should render a label and a file input field', () => {
+//   expect(component.find('input[type="file"]')).toExist();
+//   expect(component.find('label')).toExist();
+// });
+
+// it('should attach the label to the input field', () => {
+//   const id = 'fileUpload';
+//   expect(component.find('label').prop('htmlFor')).toBe(id);
+//   expect(component.find('input').prop('id')).toBe(id);
+// });
+
+// it('should not show preview if no image has been selected', () => {
+//   expect(component.find('img')).not.toExist();
+// });
 
 describe("Home", () => {
   it("should render the heading", () => {
@@ -34,11 +53,86 @@ describe("Home", () => {
     expect(fileButton).toBeInTheDocument();
   });
 
-  it("should call server route to upload when image dropped into draggable area", () => {
-    // ??
+  it('should display the uploaded image once successful', async () => {
+    render(<Home />);
+
+    const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+    const file = new File();
+    const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
+
+    const event = {
+      target: {
+        files: [
+          fileObj,
+        ],
+      },
+    }
+
+    fireEvent.change(fileInputField, event);
+
+    const image = await screen.findByRole('img');
+
+    await waitFor(() => expect(image).toHaveAttribute('src', 'upload/Blob-Attack.jpg'));
   });
 
-  it('should display the uploaded image once successful', () => {
-    // ??
+  it('should show an error message if the image upload failed', async () => {
+    mswServer.use(createImgHandlerException);
+
+    render(<Home />);
+    const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+    const file = new File();
+    const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
+
+    const event = {
+      target: {
+        files: [
+          fileObj,
+        ],
+      },
+    }
+
+    fireEvent.change(fileInputField, event);
+
+    const errorMsg = await screen.findByText(/Image not uploaded/i)
+
+    expect(errorMsg).toBeInTheDocument()
   });
 });
+
+// TODO don't know why last test is failing
+it('should not show success message if image upload failed', async () => {
+  mswServer.use(createImgHandlerException);
+
+  render(<Home />);
+  const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+  const file = new File();
+  const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
+
+  const event = {
+    target: {
+      files: [
+        fileObj,
+      ],
+    },
+  }
+
+  fireEvent.change(fileInputField, event);
+
+  const successMsg = await screen.queryByText(/Uploaded successfully!/i);
+
+  await waitFor(() => expect(successMsg).not.toBeInTheDocument());
+});
+
+
+// TODO Next steps???
+  // Do we want to test both the preview when it hasn't returned from server and after response?
+  // this line tests the imagePreview function pushes a b64 encoded obj into the page
+  // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
+
+  // TODO what are the different types of error here?
+    // wrong file type?
+    // file target is null?
+    // 404 API path is wrong?

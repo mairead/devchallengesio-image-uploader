@@ -12,6 +12,7 @@ export const config = {
 const uploadImage = next => (req, res) => {
   // TODO is this promise syntax ok?
   // promise stuff seems like voodoo atm
+  // https://stackoverflow.com/questions/43036229/is-it-an-anti-pattern-to-use-async-await-inside-of-a-new-promise-constructor
   return new Promise(async (resolve, reject) => {
     try {
       const form = new Formidable.IncomingForm({
@@ -30,6 +31,8 @@ const uploadImage = next => (req, res) => {
           `public/upload/${files.file.name}`
         );
         fs.renameSync(files.file.path, `public/upload/${files.file.name}`);
+        // need to actually set public path in returned object
+        files.file.path = `/upload/${files.file.name}`;
         req.form = { fields, files };
         return resolve(next(req, res));
       });
@@ -37,12 +40,14 @@ const uploadImage = next => (req, res) => {
       return resolve(res.status(403).send(error));
     }
   });
-}  
+}
 
+// TODO we don't need the fields object from Formidable
 const handler = (req, res) => {
   try {
     if (req.method === "POST") {
-      res.status(200).send(req.form);
+      // res.status(200).send(req.form);
+      res.status(500).json({ message: JSON.stringify('There was a server error', null, 2) });
     } else {
       throw String("Method not allowed");
     }
@@ -53,6 +58,6 @@ const handler = (req, res) => {
 
 // TODO what is stringify null 2 doing here?
 // TODO would like to understand different types of error
-// why are some logged to console and some in catch block in stringify? to send to response? 
+// why are some logged to console and some in catch block in stringify? to send to response?
 
 export default uploadImage(handler);
