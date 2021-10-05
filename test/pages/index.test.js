@@ -8,22 +8,20 @@ import { createImgHandlerException } from '../../api-mocks/handlers';
 import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
 
-// more tests?
+it('should render a label and a file input field', async () => {
+  render(<Home />);
 
-// it('should render a label and a file input field', () => {
-//   expect(component.find('input[type="file"]')).toExist();
-//   expect(component.find('label')).toExist();
-// });
+  const input = screen.getByLabelText('Choose a file');
+  await waitFor(() => expect(input).toHaveAttribute('type', 'file'));
+});
 
-// it('should attach the label to the input field', () => {
-//   const id = 'fileUpload';
-//   expect(component.find('label').prop('htmlFor')).toBe(id);
-//   expect(component.find('input').prop('id')).toBe(id);
-// });
+it('should not show preview if no image has been selected', async () => {
+  render(<Home />);
 
-// it('should not show preview if no image has been selected', () => {
-//   expect(component.find('img')).not.toExist();
-// });
+  const image = screen.getByAltText('uploaded image');
+
+  await waitFor(() => expect(image).toHaveAttribute('src', ''));
+});
 
 describe("Home", () => {
   it("should render the heading", () => {
@@ -124,10 +122,30 @@ describe("Home", () => {
 
     await waitFor(() => expect(successPanel).not.toHaveClass('preview--active'));
   });
-});
 
-//onFileSelected setErrorMsg makes update to state, and we want to act(() => { ... what goes here? })
-// should we waitFor a change in render state? the error message to appear maybe?
+  it('should show an error if you try to upload the wrong kind of file', async () => {
+    render(<Home />);
+    const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+    const file = new File();
+    const fileObj = file.create('wrong-file.pdf', 0, 'application/pdf');
+
+    const event = {
+      target: {
+        files: [
+          fileObj,
+        ],
+      },
+    }
+
+    fireEvent.change(fileInputField, event);
+
+    await waitFor(() => screen.queryByText(/sorry/i));
+
+    const errorMsg = await screen.findByText(/Your file is not the correct file format/i)
+    expect(errorMsg).toBeInTheDocument()
+  });
+});
 
 // TODO Next steps???
   // Do we want to test both the preview when it hasn't returned from server and after response?
@@ -135,8 +153,9 @@ describe("Home", () => {
   // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
 
   // TODO what are the different types of error here?
-    // wrong file type?
     // file target is null?
     // 404 API path is wrong?
 
 // jest.advanceTimersByTime if we want to test fade out
+
+// intermittent act warning in tests :(

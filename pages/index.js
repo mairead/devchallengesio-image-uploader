@@ -58,9 +58,6 @@ export default function Home() {
 
       const data = await response.json();
 
-      // console.log('res', response);
-      // console.log('data', data);
-
       if (response.ok) {
         // does this need to return into a callback or state change?
         setImagePreviewSrc(data.files.file.path);
@@ -86,8 +83,6 @@ export default function Home() {
     setShowFileUpload(false);
     // onPreviewFile(fileObj);
 
-    // console.log('what is shape of fileObj in tests', fileObj);
-    // console.log('type', fileObj.type);
     try {
       if (fileObj.type === 'image/jpeg' || fileObj.type === 'image/png') {
         onUploadFile(fileObj);
@@ -95,7 +90,6 @@ export default function Home() {
         throw new Error("Your file is not the correct file format");
       }
     } catch(e) {
-      console.log('what happens in file selection catch?', e);
       setErrorMsg(e.message);
     }
   }
