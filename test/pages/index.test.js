@@ -96,36 +96,38 @@ describe("Home", () => {
     fireEvent.change(fileInputField, event);
 
     const errorMsg = await screen.findByText(/Image not uploaded/i)
-
     expect(errorMsg).toBeInTheDocument()
+  });
+
+  it('should not show success message if image upload failed', async () => {
+    mswServer.use(createImgHandlerException);
+
+    render(<Home />);
+    const fileInputField = screen.getByLabelText(/Choose a file/i);
+
+    const file = new File();
+    const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
+
+    const event = {
+      target: {
+        files: [
+          fileObj,
+        ],
+      },
+    }
+
+    fireEvent.change(fileInputField, event);
+
+    await waitFor(() => screen.queryByText(/sorry/i));
+
+    const successPanel = screen.queryByText(/Uploaded successfully!/i).closest("div");
+
+    await waitFor(() => expect(successPanel).not.toHaveClass('preview--active'));
   });
 });
 
-// TODO don't know why last test is failing
-it('should not show success message if image upload failed', async () => {
-  mswServer.use(createImgHandlerException);
-
-  render(<Home />);
-  const fileInputField = screen.getByLabelText(/Choose a file/i);
-
-  const file = new File();
-  const fileObj = file.create('Blob-attack.jpg', 0, 'image/jpeg');
-
-  const event = {
-    target: {
-      files: [
-        fileObj,
-      ],
-    },
-  }
-
-  fireEvent.change(fileInputField, event);
-
-  const successMsg = await screen.queryByText(/Uploaded successfully!/i);
-
-  await waitFor(() => expect(successMsg).not.toBeInTheDocument());
-});
-
+//onFileSelected setErrorMsg makes update to state, and we want to act(() => { ... what goes here? })
+// should we waitFor a change in render state? the error message to appear maybe?
 
 // TODO Next steps???
   // Do we want to test both the preview when it hasn't returned from server and after response?
@@ -136,3 +138,5 @@ it('should not show success message if image upload failed', async () => {
     // wrong file type?
     // file target is null?
     // 404 API path is wrong?
+
+// jest.advanceTimersByTime if we want to test fade out

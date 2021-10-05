@@ -30,7 +30,6 @@ export default function Home() {
 
   useEffect(() => {
     if (errorMsg) {
-      console.log("CONTROL RENDER!!!", errorMsg);
       setShowLoadingDialog(false);
       setShowPreview(false);
       setShowFileUpload(true);

@@ -7,8 +7,6 @@ export default function ImagePreview({ showPreview, imagePreviewSrc }) {
     previewClasses.push('preview--active');
   }
 
-  console.log("SHOW PREVIEW", showPreview);
-
   return (
     <div className={previewClasses.join(' ')}>
       <p>Uploaded successfully!</p>

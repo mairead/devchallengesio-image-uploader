@@ -24,12 +24,12 @@ const uploadImage = next => (req, res) => {
         if (err) {
           throw String(JSON.stringify(err, null, 2));
         }
-        console.log(
-          "moving file: ",
-          files.file.path,
-          " to ",
-          `public/upload/${files.file.name}`
-        );
+        // console.log(
+        //   "moving file: ",
+        //   files.file.path,
+        //   " to ",
+        //   `public/upload/${files.file.name}`
+        // );
         fs.renameSync(files.file.path, `public/upload/${files.file.name}`);
         // need to actually set public path in returned object
         files.file.path = `/upload/${files.file.name}`;
@@ -46,8 +46,8 @@ const uploadImage = next => (req, res) => {
 const handler = (req, res) => {
   try {
     if (req.method === "POST") {
-      // res.status(200).send(req.form);
-      res.status(500).json({ message: JSON.stringify('There was a server error', null, 2) });
+      res.status(200).send(req.form);
+      // res.status(500).json({ message: JSON.stringify('There was a server error', null, 2) });
     } else {
       throw String("Method not allowed");
     }
