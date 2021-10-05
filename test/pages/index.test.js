@@ -8,22 +8,22 @@ import { createImgHandlerException } from '../../api-mocks/handlers';
 import { mswServer } from '../../api-mocks/msw-server';
 import Home from "@pages/index";
 
-it('should render a label and a file input field', async () => {
-  render(<Home />);
-
-  const input = screen.getByLabelText('Choose a file');
-  await waitFor(() => expect(input).toHaveAttribute('type', 'file'));
-});
-
-it('should not show preview if no image has been selected', async () => {
-  render(<Home />);
-
-  const image = screen.getByAltText('uploaded image');
-
-  await waitFor(() => expect(image).toHaveAttribute('src', ''));
-});
-
 describe("Home", () => {
+  it('should render a label and a file input field', async () => {
+    render(<Home />);
+
+    const input = screen.getByLabelText('Choose a file');
+    await waitFor(() => expect(input).toHaveAttribute('type', 'file'));
+  });
+
+  it('should not show preview if no image has been selected', async () => {
+    render(<Home />);
+
+    const image = screen.getByAltText('uploaded image');
+
+    await waitFor(() => expect(image).toHaveAttribute('src', ''));
+  });
+
   it("should render the heading", () => {
     render(<Home />);
 
