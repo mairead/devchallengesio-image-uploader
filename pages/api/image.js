@@ -8,10 +8,11 @@ export const config = {
   }
 };
 
-// what is this double chained syntax? curried?
 const uploadImage = next => (req, res) => {
   // TODO is this promise syntax ok?
   // promise stuff seems like voodoo atm
+
+  // can we remove the async/await from the route? and put it into the .next() like koa?
   // https://stackoverflow.com/questions/43036229/is-it-an-anti-pattern-to-use-async-await-inside-of-a-new-promise-constructor
   return new Promise(async (resolve, reject) => {
     try {
@@ -19,30 +20,25 @@ const uploadImage = next => (req, res) => {
         multiples: true,
         keepExtensions: true
       });
-      form.once("error", console.error);
+      form.on("error", console.error);
       await form.parse(req, async (err, fields, files) => {
         if (err) {
           throw String(JSON.stringify(err, null, 2));
         }
-        // console.log(
-        //   "moving file: ",
-        //   files.file.path,
-        //   " to ",
-        //   `public/upload/${files.file.name}`
-        // );
+
         fs.renameSync(files.file.path, `public/upload/${files.file.name}`);
-        // need to actually set public path in returned object
         files.file.path = `/upload/${files.file.name}`;
-        req.form = { fields, files };
+        req.form = { files };
         return resolve(next(req, res));
       });
     } catch (error) {
+      // is form.on("error") caught here?
+      // does it catch both the formidable error and the parse err thrown?
       return resolve(res.status(403).send(error));
     }
   });
 }
 
-// TODO we don't need the fields object from Formidable
 const handler = (req, res) => {
   try {
     if (req.method === "POST") {
@@ -55,9 +51,5 @@ const handler = (req, res) => {
     res.status(400).json({ message: JSON.stringify(error, null, 2) });
   }
 }
-
-// TODO what is stringify null 2 doing here?
-// TODO would like to understand different types of error
-// why are some logged to console and some in catch block in stringify? to send to response?
 
 export default uploadImage(handler);

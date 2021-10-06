@@ -1,4 +1,3 @@
-// TODO more unit tests - what would these look like?
 // TODO fix issue in CSS Module wrapper - can't run tests
 
 import React from "react";
@@ -151,10 +150,6 @@ describe("Home", () => {
   // Do we want to test both the preview when it hasn't returned from server and after response?
   // this line tests the imagePreview function pushes a b64 encoded obj into the page
   // await waitFor(() => expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,QmxvYi1BdHRhY2s='));
-
-  // TODO what are the different types of error here?
-    // file target is null?
-    // 404 API path is wrong?
 
 // jest.advanceTimersByTime if we want to test fade out
 

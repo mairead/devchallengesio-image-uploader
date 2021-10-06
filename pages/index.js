@@ -60,6 +60,7 @@ export default function Home() {
 
       if (response.ok) {
         // does this need to return into a callback or state change?
+        // setImagePreviewSrc(data.files.file.path);
         setImagePreviewSrc(data.files.file.path);
       } else {
         setErrorMsg(data.message);
