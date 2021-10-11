@@ -84,15 +84,17 @@ export default function Home() {
     setShowFileUpload(false);
     // onPreviewFile(fileObj);
 
-    try {
+    // try {
       if (fileObj.type === 'image/jpeg' || fileObj.type === 'image/png') {
         onUploadFile(fileObj);
       } else {
-        throw new Error("Your file is not the correct file format");
+        setErrorMsg('Your file is not the correct file format');
+        // use a validation message as opposed actual error
+        // throw new Error("Your file is not the correct file format");
       }
-    } catch(e) {
-      setErrorMsg(e.message);
-    }
+    // } catch(e) {
+    //   setErrorMsg(e.message);
+    // }
   }
 
   // TODO if we wanted to unit test this would we have to mock FileReader too?
