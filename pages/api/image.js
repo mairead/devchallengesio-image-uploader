@@ -18,8 +18,7 @@ export default (req, res) => {
       form.on("error", console.error);
       form.parse(req, (err, fields, files) => {
         if (err) {
-          // throw Error // instead of string
-          throw String(JSON.stringify(err, null, 2));
+          throw new Error(JSON.stringify(err, null, 2));
         }
 
         fs.renameSync(files.file.path, `public/upload/${files.file.name}`);
@@ -37,9 +36,10 @@ export default (req, res) => {
     if (req.method === "POST") {
       return promise.then(({ req, res }) => {
         res.status(200).send(req.form);
+        // res.status(500).json({ message: JSON.stringify('this is a fake error', null, 2) });
       })
     } else {
-      throw String("Method not allowed");
+      throw new Error("Method not allowed");
     }
   } catch (error) {
     return promise.then(({ res }) => {

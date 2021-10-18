@@ -121,3 +121,9 @@ code {
   border-radius: 5px;
   background-color: darksalmon;
 }
+
+.validation {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(233, 203, 122)
+}

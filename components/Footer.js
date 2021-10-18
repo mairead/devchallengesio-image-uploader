@@ -3,10 +3,8 @@
 
 export default function Footer() {
   return (
-    <>
-      <footer>
-        Made by Mairead ❤
-      </footer>
-    </>
+    <footer>
+      Made by Mairead ❤
+    </footer>
   )
 }

@@ -38,11 +38,9 @@ export default function Home() {
 
   // TODO is it better to move in component action logic to their own file?
   // Should the POST action be a custom hook for POST-ing data? like useFetch??
-
-  // I think try/catch is better here because you could render something
-  // else to tell the user it failed, so you can handle it in a
-  // meaningful way
-  // Is try/catch better for async / await ?
+  // this could be in a services folder with the response.ok pattern factored into
+  // something re-usable
+  // maybe this could just be removed from the component?
 
   const onUploadFile = async (fileObj) => {
     const body = new FormData();
@@ -50,6 +48,7 @@ export default function Home() {
 
     setErrorMsg(null);
     setImagePreviewSrc('');
+
     try {
       const response = await fetch(`${root}/api/image`, {
         method: "POST",
@@ -59,11 +58,10 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        // does this need to return into a callback or state change?
-        // setImagePreviewSrc(data.files.file.path);
         setImagePreviewSrc(data.files.file.path);
       } else {
-        setErrorMsg(data.message);
+        // how can I pass my status code into catch block here?s
+        throw new Error({ message: data.message})
         // Do I want to throw a new error here or just setState?
         // Does it matter much?
       }
@@ -71,31 +69,23 @@ export default function Home() {
       return data;
     } catch(e) {
       console.log('error in fetch catch?', e);
-      // and then you catch any other kind of error here? is this redundant?
-      // or would this catch an internet not working type of error?
+      setErrorMsg(e);
       // whats best error handling pattern?
 
       return null;
     }
-  }
+  };
 
   const onFileSelected = (fileObj) => {
     setShowLoadingDialog(true);
     setShowFileUpload(false);
     // onPreviewFile(fileObj);
-
-    // try {
-      if (fileObj.type === 'image/jpeg' || fileObj.type === 'image/png') {
-        onUploadFile(fileObj);
-      } else {
-        setErrorMsg('Your file is not the correct file format');
-        // use a validation message as opposed actual error
-        // throw new Error("Your file is not the correct file format");
-      }
-    // } catch(e) {
-    //   setErrorMsg(e.message);
-    // }
-  }
+    if (fileObj.type === 'image/jpeg' || fileObj.type === 'image/png') {
+      onUploadFile(fileObj);
+    } else {
+      setErrorMsg('Your file is not the correct file format');
+    }
+  };
 
   // TODO if we wanted to unit test this would we have to mock FileReader too?
   // const onPreviewFile = (fileObj) => {

@@ -10,7 +10,6 @@ export default function FileUploadInput({ onFileSelected }) {
     e.preventDefault();
   }
 
-  // Should this be using useCallback?? what is the benefit?
   const onFileChange = (e) => {
     const fileObj = e.target.files[0];
     onFileSelected(fileObj);
