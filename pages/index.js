@@ -42,6 +42,9 @@ export default function Home() {
   // something re-usable
   // maybe this could just be removed from the component?
 
+  // re-usable hook for handling fetch errors https://www.henriksommerfeld.se/error-handling-with-fetch/
+
+  // order of error handling https://www.peterbe.com/plog/displaying-fetch-errors-in-react
   const onUploadFile = async (fileObj) => {
     const body = new FormData();
     body.append('file', fileObj);
