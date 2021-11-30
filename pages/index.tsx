@@ -10,12 +10,11 @@ import LoadingDialog from '@components/LoadingDialog'
 import Footer from '@components/Footer'
 
 // TODO Create separate module CSS  - what is .module?
-// TODO Convert to Typescript
 export default function Home() {
-  const [showLoadingDialog, setShowLoadingDialog] = useState(false);
-  const [showFileUpload, setShowFileUpload] = useState(true);
-  const [showPreview, setShowPreview] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [showLoadingDialog, setShowLoadingDialog] = useState<boolean>(false);
+  const [showFileUpload, setShowFileUpload] = useState<boolean>(true);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<null | string>(null);
 
   const [imagePreviewSrc, setImagePreviewSrc] = useState('');
 
@@ -45,7 +44,7 @@ export default function Home() {
   // re-usable hook for handling fetch errors https://www.henriksommerfeld.se/error-handling-with-fetch/
 
   // order of error handling https://www.peterbe.com/plog/displaying-fetch-errors-in-react
-  const onUploadFile = async (fileObj) => {
+  const onUploadFile = async (fileObj: File) => {
     const body = new FormData();
     body.append('file', fileObj);
 
@@ -64,22 +63,27 @@ export default function Home() {
         setImagePreviewSrc(data.files.file.path);
       } else {
         // how can I pass my status code into catch block here?s
-        throw new Error({ message: data.message})
+
+        // yikes to implementing a custom error object?
+        // https://stackoverflow.com/questions/783818/how-do-i-create-a-custom-error-in-javascript/871646#871646
+        throw new Error({ message: data.message })
         // Do I want to throw a new error here or just setState?
         // Does it matter much?
       }
 
       return data;
     } catch(e) {
-      console.log('error in fetch catch?', e);
-      setErrorMsg(e);
+      if (e instanceof Error) {
+        console.log('error in fetch catch?', e);
+        setErrorMsg(e.message);
+      }
       // whats best error handling pattern?
 
       return null;
     }
   };
 
-  const onFileSelected = (fileObj) => {
+  const onFileSelected = (fileObj: File) => {
     setShowLoadingDialog(true);
     setShowFileUpload(false);
     // onPreviewFile(fileObj);

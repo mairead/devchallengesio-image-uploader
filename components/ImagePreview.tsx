@@ -1,6 +1,9 @@
-import PropTypes from 'prop-types';
+type Props = {
+  showPreview: boolean,
+  imagePreviewSrc: string
+}
 
-export default function ImagePreview({ showPreview, imagePreviewSrc }) {
+export default function ImagePreview({ showPreview, imagePreviewSrc }: Props) {
 
   const previewClasses = ['panel', 'preview'];
   if (showPreview) {
@@ -17,9 +20,4 @@ export default function ImagePreview({ showPreview, imagePreviewSrc }) {
       />
     </div>
   );
-}
-
-ImagePreview.propTypes = {
-  showPreview: PropTypes.bool.isRequired,
-  imagePreviewSrc: PropTypes.string.isRequired
 }

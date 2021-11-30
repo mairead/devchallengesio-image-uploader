@@ -103,7 +103,7 @@ code {
 }
 
 .button {
-  background: #2F80ED;
+  background: #274c7c;
   color: #fff;
   padding: 8px 16px;
   border-radius: 8px;
@@ -114,6 +114,15 @@ code {
   line-height: 16px;
   text-align: center;
   letter-spacing: -0.035em;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 2px 2px #51a7e8;
 }
 
 .error {

@@ -1,31 +1,34 @@
 import { useState } from "react";
-import PropTypes from 'prop-types';
 
-export default function DragAndDropInput({ onFileSelected }) {
+type Props = {
+  onFileSelected: (fileObj: File) => void
+}
+
+export default function DragAndDropInput({ onFileSelected }: Props) {
   const [dragActive, setDragActive] = useState(false);
 
-  const onDragOver = (e) => {
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     setDragActive(true);
 
     e.preventDefault();
     e.stopPropagation();
   }
 
-  const onDragEnter = (e) => {
+  const onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     setDragActive(true);
 
     e.preventDefault();
     e.stopPropagation();
   }
 
-  const onDragLeave = (e) => {
+  const onDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     setDragActive(false);
 
     e.preventDefault();
     e.stopPropagation();
   }
 
-  const onDrop = (e) => {
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     setDragActive(false);
 
     const fileObj = e.dataTransfer.files[0];
@@ -41,18 +44,14 @@ export default function DragAndDropInput({ onFileSelected }) {
   }
 
   return (
-    <div className={draggableClasses.join(' ')}
+    <div className={draggableClasses.join(' ')} aria-labelledby="drag-label"
       onDragOver={onDragOver}
       onDragEnter={onDragEnter}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
       <img src="/image.svg" alt="placeholder image showing scenic view" />
-      <p>Drag and Drop your image here</p>
+      <p id="drag-label">Drag and Drop your image here</p>
     </div>
   );
-}
-
-DragAndDropInput.propTypes = {
-  onFileSelected: PropTypes.func.isRequired
 }
